@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function SignUpForm() {
+export default function SignUpForm({ setToken }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -13,13 +13,22 @@ export default function SignUpForm() {
         "https://fsa-jwt-practice.herokuapp.com/signup",
         {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({ username, password }),
         }
       );
+
       const result = await response.json();
       console.log(result);
+      if (response.ok) {
+        setToken(result.token);
+      } else {
+        setError("Registration failed");
+      }
     } catch (error) {
-      setError(error.message);
+      setError("An error occurred during sign-up");
     }
   }
 
@@ -49,4 +58,8 @@ export default function SignUpForm() {
   );
 }
 
-// auth token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2O…0NjR9.Nv0ShWRj8_ijoIphE8bRvsmf2g-gl1C-5nW1PlxuanE
+SignUpForm.propTypes = {
+  setToken: () => {},
+};
+
+// token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZ…g3Mn0.-tIgLGCH8hhBYDCzF_CIxzcldfhEJGrVQUIWE2iY1uc'

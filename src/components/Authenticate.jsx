@@ -16,8 +16,14 @@ export default function Authenticate({ token }) {
           },
         }
       );
+
       const result = await response.json();
-      setSuccessMessage(result.message);
+
+      if (response.ok) {
+        setSuccessMessage(result.message);
+      } else {
+        setError("Authentication failed");
+      }
     } catch (error) {
       setError(error.message);
     }
@@ -32,3 +38,7 @@ export default function Authenticate({ token }) {
     </div>
   );
 }
+
+Authenticate.propTypes = {
+  token: () => {},
+};
